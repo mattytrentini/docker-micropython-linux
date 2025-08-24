@@ -15,7 +15,7 @@ RUN apt update && \
         libsqlite3-dev
 
 RUN rm -rf /var/lib/apt/lists/*
-RUN git clone --depth 1 --branch v1.23.0 https://github.com/micropython/micropython.git
+RUN git clone --depth 1 --branch v1.26.0 https://github.com/micropython/micropython.git
 RUN make -C micropython/mpy-cross
 RUN make -C micropython/ports/unix submodules
 RUN make -C micropython/ports/unix

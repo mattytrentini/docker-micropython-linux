@@ -7,26 +7,32 @@ Docker image that comes loaded with the unix (linux in this case) port of microp
 * Experimenting with micropython without any complexity of building yourself or overhead of buying a board first.
 * There wasn't an existing and well-maintained image.
 
-The image is based off the official Debian-slim (stretch) because it's fairly slim (not as slim as alpine, but that can be a headache to build).
+The image is based off the official Debian-slim (bookworm) because it's fairly slim (not as slim as alpine, but that can be a headache to build), and is built using the `coverage` variant of the unix port — this enables almost every optional MicroPython feature (e.g. `sys.settrace`, split heap), since the unix port is primarily used for testing rather than as a lean runtime.
 
 #### Getting Started
 
 Providing you have access to Docker, you can run the latest version quite easily by:
 
-    docker run -it mitchins/micropython-linux
-    MicroPython v1.9.4-403-g81e320ae on 2018-07-21; linux version
+    $ docker run -it micropython/unix
+    MicroPython v1.29.0 on 2026-08-27; linux [GCC 12.2.0] version
     Use Ctrl-D to exit, Ctrl-E for paste mode
     >>> ^C
 
-Tags are available on the Docker Hub listing
+Tags are available on the [Docker Hub listing](https://hub.docker.com/r/micropython/unix/tags) — `latest` always tracks the newest MicroPython release, and each release is also available pinned by version, e.g. `micropython/unix:v1.29.0`.
 
-If you check the Dockerfile, you will see it starts up micropython automatically which is stored in /usr/local/bin/micropython
+You can also run a one-off script directly, since the image's entrypoint is the `micropython` binary itself:
 
-To install something else, you can:
+    $ docker run --rm micropython/unix -c "print('hello from micropython')"
+    hello from micropython
 
-    # micropython -m upip install micropython-unittest
-    Installing to: /root/.micropython/lib/
-    Warning: pypi.org SSL certificate is not validated
-    Installing micropython-unittest 0.3.2 from https://files.pythonhosted.org/packages/9a/42/41057b8da94414a17f7028ee08035c3d945befebddc76d58988067ddaf0f/micropython-unittest-0.3.2.tar.gz
+To install a package from micropython-lib, use `mip`:
 
-That's about it, the goal is to maintain the latest and stable tagged versions so regressions can be tested as needed, or experimented features accessed.
+    $ docker run --rm micropython/unix -m mip install aioble
+
+#### Keeping this image up to date
+
+New images are built and pushed automatically — a scheduled GitHub Actions workflow (`.github/workflows/publish.yml`) checks daily for new MicroPython releases and, if one hasn't been published yet, builds and pushes both `micropython/unix:<version>` and `micropython/unix:latest`. The MicroPython version is passed to the build as a Docker build ARG, so the `Dockerfile` itself never needs to be edited for a new release.
+
+To build a specific version locally instead of relying on the default pinned in the `Dockerfile`:
+
+    docker build --build-arg MICROPY_VERSION=v1.29.0 -t micropython-unix .

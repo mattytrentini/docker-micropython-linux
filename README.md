@@ -7,7 +7,7 @@ Docker image that comes loaded with the unix (linux in this case) port of microp
 * Experimenting with micropython without any complexity of building yourself or overhead of buying a board first.
 * There wasn't an existing and well-maintained image.
 
-The image is based off the official Debian-slim (bookworm) because it's fairly slim (not as slim as alpine, but that can be a headache to build), and is built using the `coverage` variant of the unix port — this enables almost every optional MicroPython feature (e.g. `sys.settrace`, split heap), since the unix port is primarily used for testing rather than as a lean runtime.
+The image is based off the official Debian-slim (bookworm) because it's fairly slim (not as slim as alpine, but that can be a headache to build), and is built using the standard variant of the unix port.
 
 #### Getting Started
 

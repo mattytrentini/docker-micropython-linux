@@ -21,9 +21,9 @@ RUN apt update && \
 RUN rm -rf /var/lib/apt/lists/*
 RUN git clone --depth 1 --branch ${MICROPY_VERSION} https://github.com/micropython/micropython.git
 RUN make -C micropython/mpy-cross
-RUN make -C micropython/ports/unix VARIANT=coverage submodules
-RUN make -C micropython/ports/unix VARIANT=coverage
-RUN make -C micropython/ports/unix VARIANT=coverage install
+RUN make -C micropython/ports/unix submodules
+RUN make -C micropython/ports/unix
+RUN make -C micropython/ports/unix install
 RUN apt-get purge --auto-remove -y build-essential git pkg-config python3
 RUN rm -rf micropython
 
